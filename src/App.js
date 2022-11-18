@@ -9,10 +9,8 @@ import {
   useGLTF,
   useAnimations,
 } from "@react-three/drei";
-// import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import {
   CapsuleCollider,
-  // useRapier,
   Physics,
   RigidBody,
   Debug,
@@ -20,7 +18,6 @@ import {
 import { useCylinder } from "@react-three/cannon";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-// import { Physics, Debug } from "@react-three/cannon";
 import { useInput } from "./useInput";
 
 let walkDirection = new THREE.Vector3();
@@ -58,13 +55,7 @@ function Character() {
   const currentAction = useRef();
   const camera = useThree((state) => state.camera);
   const controlsRef = useRef();
-  const characterRBRef = useRef();
-  //   const [subscribeKeys, getKeys] = useKeyboardControls();
   const { backward, forward, right, left, shift, jump } = useInput();
-  // const gltf = useLoader(GLTFLoader, "/soldier.glb");
-  const { scene } = model;
-  // scene.position.set(0, -0.85, 0);
-  // scene.rotation.set(0, 3, 0);
 
   const updateCameraTarget = (moveX, moveZ) => {
     // move camera
@@ -136,7 +127,6 @@ function Character() {
   });
 
   return (
-    // <Suspense fallback={null}>
     <>
       <OrbitControls ref={controlsRef} />
       <RigidBody
@@ -147,19 +137,14 @@ function Character() {
         mass={1}
         position={[0, 0, 0]}
       >
-        {/* <primitive object={ hamburger.scene } scale={ 0.2 } /> */}
         <primitive position={[0, 0, 0]} object={model.scene} />
       </RigidBody>
     </>
-    // <mesh>
-    // </mesh>
-    // </Suspense>
   );
 }
 
 function Environment() {
   const gltf = useLoader(GLTFLoader, "/environment.glb");
-  // gltf.scene.position.set(-20, -1, 0);
 
   return (
     <Suspense fallback={null}>
@@ -172,10 +157,7 @@ function Environment() {
 
 function App() {
   return (
-    <Canvas
-      style={{ height: "100vh", width: "100vw" }}
-      // camera={{ fov: 25, near: 0.1, far: 1000, position: [0, 4, 6] }}
-    >
+    <Canvas style={{ height: "100vh", width: "100vw" }}>
       <Suspense fallback={null}>
         <Physics>
           {/* <Debug /> */}
@@ -184,7 +166,6 @@ function App() {
           <directionalLight color="white" position={[0, 0, 5]} />
           <Character />
           <Environment />
-          {/* <OrbitControls /> */}
         </Physics>
       </Suspense>
     </Canvas>
