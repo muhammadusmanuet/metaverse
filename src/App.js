@@ -9,17 +9,18 @@ import {
   useGLTF,
   useAnimations,
 } from "@react-three/drei";
+// import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import {
   CapsuleCollider,
-  useRapier,
-  // Physics,
+  // useRapier,
+  Physics,
   RigidBody,
-  // Debug,
+  Debug,
 } from "@react-three/rapier";
 import { useCylinder } from "@react-three/cannon";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Physics, Debug } from "@react-three/cannon";
+// import { Physics, Debug } from "@react-three/cannon";
 import { useInput } from "./useInput";
 
 let walkDirection = new THREE.Vector3();
@@ -57,6 +58,7 @@ function Character() {
   const currentAction = useRef();
   const camera = useThree((state) => state.camera);
   const controlsRef = useRef();
+  const characterRBRef = useRef();
   //   const [subscribeKeys, getKeys] = useKeyboardControls();
   const { backward, forward, right, left, shift, jump } = useInput();
   // const gltf = useLoader(GLTFLoader, "/soldier.glb");
@@ -137,7 +139,17 @@ function Character() {
     // <Suspense fallback={null}>
     <>
       <OrbitControls ref={controlsRef} />
-      <primitive position={[0, 0, 0]} object={model.scene} />
+      <RigidBody
+        restitution={0}
+        friction={0}
+        type="fixed"
+        colliders="hull"
+        mass={1}
+        position={[0, 0, 0]}
+      >
+        {/* <primitive object={ hamburger.scene } scale={ 0.2 } /> */}
+        <primitive position={[0, 0, 0]} object={model.scene} />
+      </RigidBody>
     </>
     // <mesh>
     // </mesh>
@@ -151,9 +163,9 @@ function Environment() {
 
   return (
     <Suspense fallback={null}>
-      <mesh>
+      <RigidBody restitution={0} friction={0} type="fixed" colliders="hull">
         <primitive object={gltf.scene} />
-      </mesh>
+      </RigidBody>
     </Suspense>
   );
 }
@@ -165,16 +177,15 @@ function App() {
       // camera={{ fov: 25, near: 0.1, far: 1000, position: [0, 4, 6] }}
     >
       <Suspense fallback={null}>
-        {/* <Physics> */}
-        {/* <Debug color="black" scale={1.1}>
-          </Debug> */}
-        <spotLight angle={15} />
-        <ambientLight intensity={0.5} />
-        <directionalLight color="white" position={[0, 0, 5]} />
-        <Character />
-        <Environment />
-        {/* <OrbitControls /> */}
-        {/* </Physics> */}
+        <Physics>
+          {/* <Debug /> */}
+          <spotLight angle={15} />
+          <ambientLight intensity={0.5} />
+          <directionalLight color="white" position={[0, 0, 5]} />
+          <Character />
+          <Environment />
+          {/* <OrbitControls /> */}
+        </Physics>
       </Suspense>
     </Canvas>
   );
